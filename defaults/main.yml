@@ -115,3 +115,21 @@ redis_sentinel_monitors:
     failover_timeout: 180000
     notification_script: false
     client_reconfig_script: false
+
+# dependencies
+redis_apt_dependencies:
+  - "gcc"
+  - "make"
+  - "libc6-dev"
+  - "{{ 'libc6-dev-i386' if redis_make_32bit|bool else omit }}"
+redis_yum_dependencies:
+  - "gcc"
+  - "make"
+redis_yum_32bit_dependencies:
+  - "libgcc.i686"
+  - "glibc-devel.i686"
+redis_zypper_dependencies:
+  - "gcc"
+  - "make"
+  - "{{ 'gcc-32bit' if redis_make_32bit|bool else omit }}"
+  - "{{ 'libgcc_s1-32bit' if redis_make_32bit|bool else omit }}"
