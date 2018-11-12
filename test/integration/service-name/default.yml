@@ -1,5 +1,5 @@
 ---
 - hosts: localhost
   roles:
-    - role: ansible-redis
+    - role: ansible-role-redis
       redis_service_name: redis
