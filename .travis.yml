@@ -28,11 +28,6 @@ script:
     || (echo 'Idempotency: FAIL' && exit 1)
   # Test Redis Sentinel
   - "ansible-playbook -i localhost, test/test_sentinel.yml --connection=local --become"
-  - >
-    ansible-playbook -i localhost, test/test_sentinel.yml --connection=local --become
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotency: PASS' && exit 0)
-    || (echo 'Idempotency: FAIL' && exit 1)
   # Connection test
   - "/opt/redis/bin/redis-cli PING"
   - "/opt/redis/bin/redis-cli -p 26379 PING"
@@ -42,10 +37,6 @@ script:
     | python -m json.tool
     && (echo 'Facts syntax: PASS' && exit 0)
     || (echo 'Facts syntax: FAIL' && exit 1)
-  # Test all replication components (server, slave, sentinel)
-  # No idempotency check here (yet) because the sentinel config writes to itself
-  # after a config is discovered from the Redis server.
-  - ansible-playbook -i localhost, test/test_all.yml --connection=local --become
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
