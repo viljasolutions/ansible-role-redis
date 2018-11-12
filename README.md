@@ -1,6 +1,6 @@
 # ansible-redis
 
-[![Build Status](https://travis-ci.org/cimon-io/ansible-redis.svg?branch=master)](https://travis-ci.org/cimon-io/ansible-redis) [![Ansible Galaxy](https://img.shields.io/badge/galaxy-cimon--io.redis-blue.svg)](https://galaxy.ansible.com/cimon-io/ansible-role-redis)
+[![Build Status](https://travis-ci.org/cimon-io/ansible-role-redis.svg?branch=master)](https://travis-ci.org/cimon-io/ansible-role-redis) [![Ansible Galaxy](https://img.shields.io/badge/galaxy-cimon--io.redis-blue.svg)](https://galaxy.ansible.com/cimon-io/ansible-role-redis)
 
  - Ansible 2.4+
  - Compatible with most versions of Ubuntu/Debian and RHEL/CentOS 6.x
