@@ -121,7 +121,7 @@ redis_apt_dependencies:
   - "gcc"
   - "make"
   - "libc6-dev"
-  - "{{ 'libc6-dev-i386' if redis_make_32bit|bool else omit }}"
+  - "{{ redis_make_32bit|bool | ternary('libc6-dev-i386', '') }}"
 redis_yum_dependencies:
   - "gcc"
   - "make"
@@ -131,5 +131,5 @@ redis_yum_32bit_dependencies:
 redis_zypper_dependencies:
   - "gcc"
   - "make"
-  - "{{ 'gcc-32bit' if redis_make_32bit|bool else omit }}"
-  - "{{ 'libgcc_s1-32bit' if redis_make_32bit|bool else omit }}"
+  - "{{ redis_make_32bit|bool | ternary('gcc-32bit', '') }}"
+  - "{{ redis_make_32bit|bool | ternary('libgcc_s1-32bit', '') }}"
