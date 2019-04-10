@@ -29,17 +29,10 @@
     path: /etc/redis
     state: directory
 
-- name: check if redis user exists (ignore errors)
-  command: id {{ redis_user }}
-  ignore_errors: yes
-  changed_when: false
-  register: user_exists
-
 - name: add redis group
   group:
     name: "{{ redis_group }}"
     state: present
-  when: user_exists is failed
 
 - name: add redis user
   user:
@@ -49,7 +42,7 @@
     home: "{{ redis_install_dir }}"
     shell: /bin/false
     system: yes
-  when: user_exists is failed
+    state: present
 
 - name: create /var/run/redis
   file:
@@ -61,7 +54,7 @@
   command: make PREFIX={{ redis_install_dir }} install
   args:
     chdir: /usr/local/src/redis-{{ redis_version }}
-  when: redis_prev_installation.stat.exists == False or redis_upgrade.changed
+  when: ( not redis_prev_installation.stat.exists ) or ( redis_upgrade is changed )
   notify: "restart redis"
 
 - name: list redis binaries to add to alternatives
@@ -74,4 +67,4 @@
     name: "{{ item }}"
     path: "{{ redis_install_dir }}/bin/{{ item }}"
     link: "/usr/bin/{{ item }}"
-  with_items: "{{ redis_binaries.stdout_lines }}"
+  loop: "{{ redis_binaries.stdout_lines }}"

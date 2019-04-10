@@ -46,7 +46,8 @@
     - (redis_sentinel_pidfile|dirname).startswith("/var/run") or (redis_sentinel_pidfile|dirname).startswith("/run")
 
 - name: reload systemd daemon
-  command: systemctl daemon-reload
+  systemd:
+    daemon_reload: True
   when:
     - redis_as_service
     - ansible_service_mgr|default() == "systemd"
@@ -76,10 +77,11 @@
     - redis_sentinel_logfile != '""'
     - not sentinel_logdir.stat.exists
 
-- name: touch the sentinel log file
-  file:
-    state: touch
-    path: "{{ redis_sentinel_logfile }}"
+- name: create the sentinel log file
+  copy:
+    content: ""
+    dest: "{{ redis_sentinel_logfile }}"
+    force: no
     owner: "{{ redis_user }}"
     group: "{{ redis_group }}"
   when: redis_sentinel_logfile != '""'
@@ -101,13 +103,23 @@
     - redis_sentinel_pidfile != '""'
     - not sentinel_piddir.stat.exists
 
-- name: create sentinel config file
+- name: create sentinel reference config file
   template:
     src: redis_sentinel.conf.j2
+    dest: /etc/redis/sentinel_{{ redis_sentinel_port }}.refconf
+    owner: "{{ redis_user }}"
+    mode: 0640
+  register: sentinel_refconf
+  notify: "restart sentinel {{ redis_sentinel_port }}"
+
+- name: enforce new sentinel config file
+  copy:
+    remote_src: yes
+    src: /etc/redis/sentinel_{{ redis_sentinel_port }}.refconf
     dest: /etc/redis/sentinel_{{ redis_sentinel_port }}.conf
     owner: "{{ redis_user }}"
     mode: 0640
-  notify: "restart sentinel {{ redis_sentinel_port }}"
+  when: sentinel_refconf is changed
 
 - name: add sentinel init config file
   template:

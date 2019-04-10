@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/cimon-io/ansible-role-redis.svg?branch=master)](https://travis-ci.org/cimon-io/ansible-role-redis) [![Ansible Galaxy](https://img.shields.io/badge/galaxy-cimon--io.redis-blue.svg)](https://galaxy.ansible.com/cimon-io/redis)
 
- - Ansible 2.4+
+ - Ansible 2.6+
  - Compatible with most versions of Ubuntu/Debian and RHEL/CentOS 6.x
 
 ## Contents
@@ -187,7 +187,7 @@ Here is a list of all the default variables for this role, which are also availa
 ``` yml
 ---
 ## Installation options
-redis_version: 2.8.9
+redis_version: 5.0.0
 redis_install_dir: /opt/redis
 redis_dir: /var/lib/redis/{{ redis_port }}
 redis_download_url: "http://download.redis.io/releases/redis-{{ redis_version }}.tar.gz"

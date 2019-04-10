@@ -46,7 +46,8 @@
     - (redis_pidfile|dirname).startswith('/var/run') or (redis_pidfile|dirname).startswith('/run')
 
 - name: reload systemd daemon
-  command: systemctl daemon-reload
+  systemd:
+    daemon_reload: True
   when:
     - redis_as_service
     - ansible_service_mgr|default() == "systemd"
@@ -76,10 +77,11 @@
     - redis_logfile != '""'
     - not logdir.stat.exists
 
-- name: touch the log file
-  file:
-    state: touch
-    path: "{{ redis_logfile }}"
+- name: create the log file
+  copy:
+    content: ""
+    dest: "{{ redis_logfile }}"
+    force: no
     owner: "{{ redis_user }}"
     group: "{{ redis_group }}"
   when: redis_logfile != '""'
@@ -101,13 +103,23 @@
     - redis_pidfile != '""'
     - not piddir.stat.exists
 
-- name: create redis config file
+- name: create redis reference config file
   template:
     src: redis.conf.j2
+    dest: /etc/redis/{{ redis_port }}.refconf
+    owner: "{{ redis_user }}"
+    mode: 0640
+  register: redis_refconf
+  notify: "restart redis {{ redis_port }}"
+
+- name: enforce new redis config file
+  copy:
+    remote_src: yes
+    src: /etc/redis/{{ redis_port }}.refconf
     dest: /etc/redis/{{ redis_port }}.conf
     owner: "{{ redis_user }}"
     mode: 0640
-  notify: "restart redis {{ redis_port }}"
+  when: redis_refconf is changed
 
 - name: add redis init config file
   template:

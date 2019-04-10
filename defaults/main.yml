@@ -125,3 +125,5 @@ redis_yum_32bit_dependencies:
   - "libgcc.i686"
   - "glibc-devel.i686"
 redis_zypper_dependencies: "{{ ['gcc', 'make'] }} + {{ ['gcc-32bit', 'libgcc_s1-32bit'] if redis_make_32bit|bool else [] }}"
+
+remote_package_retries: 5
