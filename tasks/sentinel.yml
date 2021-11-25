@@ -18,7 +18,7 @@
       - "{{ ansible_os_family }}/redis_sentinel.init.j2"
       - default/redis_sentinel.init.j2
       paths:
-        - ../templates
+        - "templates"
   when: redis_as_service and ansible_service_mgr|default() != "systemd"
 
 - name: create sentinel systemd service
@@ -31,7 +31,7 @@
       - "{{ ansible_os_family }}/redis_sentinel.service.j2"
       - default/redis_sentinel.service.j2
       paths:
-        - ../templates
+        - "templates"
   register: sentinel_unit_file
   when: redis_as_service and ansible_service_mgr|default() == "systemd"
 

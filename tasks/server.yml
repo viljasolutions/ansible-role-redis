@@ -18,7 +18,7 @@
       - "{{ ansible_os_family }}/redis.init.j2"
       - default/redis.init.j2
       paths:
-        - ../templates
+        - "templates"
   when: redis_as_service and ansible_service_mgr|default() != "systemd"
 
 - name: create redis systemd service
@@ -31,7 +31,7 @@
       - "{{ ansible_os_family }}/redis.service.j2"
       - default/redis.service.j2
       paths:
-        - ../templates
+        - "templates"
   register: redis_unit_file
   when: redis_as_service and ansible_service_mgr|default() == "systemd"
 
